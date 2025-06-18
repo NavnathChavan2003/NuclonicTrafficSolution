@@ -75,7 +75,7 @@
     const greenTerminalBtn = document.getElementById('greenTerminalBtn');
     const roadButtons = document.querySelectorAll('.road-btn');
 
-    let isSignal = true, isAuto = true, activeGX = false, activeGT = false;
+    let isSignal = true, isAuto = true;
 
     function updateSignalState() {
       modeBtn.disabled = !isSignal;
@@ -95,13 +95,8 @@
       fetch(`${BASE_URL}V0=${isSignal ? 0 : 1}`);
 
       if (!isSignal) {
-        // Automatically switch to auto mode
         isAuto = true;
         fetch(`${BASE_URL}V1=0`);
-
-        // Turn OFF GX and GT
-        activeGX = false;
-        activeGT = false;
         greenExtendBtn.classList.remove('btn-green');
         greenExtendBtn.classList.add('btn-red');
         greenTerminalBtn.classList.remove('btn-green');
@@ -109,7 +104,6 @@
         fetch(`${BASE_URL}V2=0`);
         fetch(`${BASE_URL}V3=0`);
 
-        // Turn OFF all road buttons
         roadButtons.forEach((btn, idx) => {
           btn.classList.remove('btn-green');
           btn.classList.add('btn-red');
@@ -131,8 +125,6 @@
           fetch(`${BASE_URL}V${4 + idx}=0`);
         });
       } else {
-        activeGX = false;
-        activeGT = false;
         greenExtendBtn.classList.remove('btn-green');
         greenExtendBtn.classList.add('btn-red');
         greenTerminalBtn.classList.remove('btn-green');
@@ -145,39 +137,35 @@
     });
 
     greenExtendBtn.addEventListener('click', () => {
-      if (!activeGX) {
-        activeGX = true;
-        activeGT = false;
-        greenExtendBtn.classList.add('btn-green');
-        greenExtendBtn.classList.remove('btn-red');
-        greenTerminalBtn.classList.remove('btn-green');
-        greenTerminalBtn.classList.add('btn-red');
-        fetch(`${BASE_URL}V2=1`);
-        fetch(`${BASE_URL}V3=0`);
-      } else {
-        activeGX = false;
+      greenExtendBtn.classList.add('btn-green');
+      greenExtendBtn.classList.remove('btn-red');
+      greenTerminalBtn.classList.remove('btn-green');
+      greenTerminalBtn.classList.add('btn-red');
+      fetch(`${BASE_URL}V2=1`);
+      fetch(`${BASE_URL}V3=0`);
+
+      // Auto turn off after 1 second
+      setTimeout(() => {
         greenExtendBtn.classList.remove('btn-green');
         greenExtendBtn.classList.add('btn-red');
         fetch(`${BASE_URL}V2=0`);
-      }
+      }, 300);
     });
 
     greenTerminalBtn.addEventListener('click', () => {
-      if (!activeGT) {
-        activeGT = true;
-        activeGX = false;
-        greenTerminalBtn.classList.add('btn-green');
-        greenTerminalBtn.classList.remove('btn-red');
-        greenExtendBtn.classList.remove('btn-green');
-        greenExtendBtn.classList.add('btn-red');
-        fetch(`${BASE_URL}V3=1`);
-        fetch(`${BASE_URL}V2=0`);
-      } else {
-        activeGT = false;
+      greenTerminalBtn.classList.add('btn-green');
+      greenTerminalBtn.classList.remove('btn-red');
+      greenExtendBtn.classList.remove('btn-green');
+      greenExtendBtn.classList.add('btn-red');
+      fetch(`${BASE_URL}V3=1`);
+      fetch(`${BASE_URL}V2=0`);
+
+      // Auto turn off after 1 second
+      setTimeout(() => {
         greenTerminalBtn.classList.remove('btn-green');
         greenTerminalBtn.classList.add('btn-red');
         fetch(`${BASE_URL}V3=0`);
-      }
+      }, 300);
     });
 
     roadButtons.forEach((btn, idx) => {
