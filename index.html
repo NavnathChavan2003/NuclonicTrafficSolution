@@ -144,7 +144,6 @@
       fetch(`${BASE_URL}V2=1`);
       fetch(`${BASE_URL}V3=0`);
 
-      // Auto turn off after 1 second
       setTimeout(() => {
         greenExtendBtn.classList.remove('btn-green');
         greenExtendBtn.classList.add('btn-red');
@@ -160,7 +159,6 @@
       fetch(`${BASE_URL}V3=1`);
       fetch(`${BASE_URL}V2=0`);
 
-      // Auto turn off after 1 second
       setTimeout(() => {
         greenTerminalBtn.classList.remove('btn-green');
         greenTerminalBtn.classList.add('btn-red');
@@ -171,7 +169,6 @@
     roadButtons.forEach((btn, idx) => {
       btn.addEventListener('click', () => {
         const pin = `V${4 + idx}`;
-        const isActive = btn.classList.contains('btn-green');
 
         roadButtons.forEach((b, i) => {
           b.classList.remove('btn-green');
@@ -179,11 +176,16 @@
           fetch(`${BASE_URL}V${4 + i}=0`);
         });
 
-        if (!isActive) {
-          btn.classList.remove('btn-red');
-          btn.classList.add('btn-green');
-          fetch(`${BASE_URL}${pin}=1`);
-        }
+        btn.classList.remove('btn-red');
+        btn.classList.add('btn-green');
+        fetch(`${BASE_URL}${pin}=1`);
+
+        // Auto turn off after 1 second
+        setTimeout(() => {
+          btn.classList.remove('btn-green');
+          btn.classList.add('btn-red');
+          fetch(`${BASE_URL}${pin}=0`);
+        }, 1000);
       });
     });
 
